@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<title>RepVibe Progress</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏋️</text></svg>"/>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--bg:#0f172a;--card:#1e293b;--card2:#162033;--bd:#334155;--fg:#f8fafc;--mut:#94a3b8;--acc:#f97316;--acc2:#ea580c;--red:#ef4444;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:Inter,system-ui,-apple-system,'Segoe UI',sans-serif;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}button:disabled{cursor:not-allowed;opacity:.4}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.app{display:flex;flex-direction:column;height:100dvh}
+.top{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--bd)}
+.logo{display:grid;place-items:center;width:36px;height:36px;border-radius:8px;background:var(--acc);box-shadow:0 8px 20px #f9731650;flex:none}
+.top h1{margin:0;font-size:16px}.top p{margin:0;font-size:12px;color:var(--mut)}
+.center{flex:1;display:grid;place-content:center;justify-items:center;gap:12px;color:var(--mut);font-size:14px;padding:24px;text-align:center}
+.center .bad{color:var(--red);max-width:420px;margin:0}
+.cols{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr 1.4fr}
+@media(max-width:800px){.cols{grid-template-columns:1fr;grid-auto-rows:minmax(260px,1fr);overflow-y:auto}}
+.panel{display:flex;flex-direction:column;min-height:0;background:var(--card);border-right:1px solid var(--bd)}
+.ph{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:20px 20px 12px}
+.ph h2{margin:0;font-size:13px;letter-spacing:.05em;text-transform:uppercase}
+.ph small{display:block;margin-top:2px;font-size:12px;color:var(--mut);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.badge{font-size:12px;background:var(--bg);color:var(--mut);padding:2px 8px;border-radius:99px}
+.list{flex:1;overflow-y:auto;padding:0 12px 8px;list-style:none;margin:0}
+.hint{padding:32px 8px;text-align:center;font-size:14px;color:var(--mut)}
+.row{display:flex;align-items:center;gap:8px;padding:8px 12px;margin-bottom:4px;border:1px solid transparent;border-radius:8px}
+button.row{width:100%;background:none;text-align:left}
+.row.sel{cursor:pointer}.row:hover{background:var(--card2)}
+.row.on{background:#f9731618;border-color:#f9731650}.row.on .nm{color:#fdba74}
+.static{cursor:default}
+.tx{flex:1;min-width:0}.nm{font-size:14px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dt{font-size:12px;color:var(--mut);line-height:1.5}
+.nm.wrap{white-space:normal}
+.chev{flex:none;color:#475569}.row.on .chev{color:var(--acc)}
+.grp{position:sticky;top:0;z-index:1;margin:0 -12px 4px;padding:10px 24px 6px;background:var(--card);font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--mut)}
+.cat{font-size:11px;color:var(--mut);background:var(--bg);padding:1px 7px;border-radius:99px;flex:none}
+.foot{padding:12px;border-top:1px solid var(--bd)}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:8px 12px;border:0;border-radius:8px;background:var(--acc);color:#fff;font-weight:600;font-size:14px;box-shadow:0 8px 20px #f9731650}
+.btn:hover:not(:disabled){background:var(--acc2)}.btn:disabled{box-shadow:none}
+.btn.sm{width:auto;padding:8px 16px}
+.ov{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:16px;background:#00000080;backdrop-filter:blur(4px)}
+.ov[hidden]{display:none}
+.modal{width:100%;max-width:760px;max-height:92dvh;overflow-y:auto;background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:0 25px 50px #0008}
+.mh{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:16px 20px;border-bottom:1px solid var(--bd)}
+.mh h2{margin:0;font-size:14px}
+.ib{background:none;border:0;border-radius:6px;padding:6px;color:var(--mut);display:grid}.ib:hover{background:var(--bg);color:var(--fg)}
+.mb{display:flex;flex-direction:column;gap:16px;padding:16px 20px 20px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:4px 10px;border:1px solid var(--bd);border-radius:99px;background:var(--bg);font-size:12px;color:var(--mut)}
+.chip.on{border-color:var(--acc);color:#fdba74;background:#f9731618}
+.cv{position:relative;height:min(52vh,380px)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head>
+<body>
+<main class="app">
+  <header class="top">
+    <span class="logo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.4 14.4 9.6 9.6M18.657 21.485a2 2 0 1 1-2.829-2.828l-1.767 1.768a2 2 0 1 1-2.829-2.829l6.364-6.364a2 2 0 1 1 2.829 2.829l-1.768 1.767a2 2 0 1 1 2.828 2.829zM21.5 21.5l-1.4-1.4M3.9 3.9 2.5 2.5M6.404 12.768a2 2 0 1 1-2.829-2.829l1.768-1.767a2 2 0 1 1-2.828-2.829l2.828-2.828a2 2 0 1 1 2.829 2.828l1.767-1.768a2 2 0 1 1 2.829 2.829z"/></svg></span>
+    <div><h1>Workout Progress</h1><p>Splits → Days → Workouts</p></div>
+  </header>
+  <div id="root" style="display:contents"></div>
+</main>
+
+<div class="ov" id="ov" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="ct">
+    <header class="mh"><h2 id="ct">Progress</h2>
+      <button class="ib" id="cx" aria-label="Close"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></header>
+    <div class="mb">
+      <div class="chips" id="seg">
+        <button class="chip on" data-m="volume">Volume</button>
+        <button class="chip" data-m="weight">Top weight</button>
+        <button class="chip" data-m="reps">Total reps</button>
+      </div>
+      <div class="cv"><canvas id="cv"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+const root = document.getElementById('root');
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const tg = window.Telegram && window.Telegram.WebApp;
+if (tg) { try { tg.ready(); tg.expand(); } catch (e) {} }
+const demo = new URLSearchParams(location.search).has('demo');
+const chevron = '<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>';
+
+let tree = [], splitId = null, dayId = null;
+
+/* ---------- data ---------- */
+const nums = v => (v == null || v === '' ? [] : (Array.isArray(v) ? v : String(v).split(/[,\/ ]+/))).filter(x => x != null && x !== '').map(Number).filter(n => !isNaN(n));
+const val = v => (v == null || v === '' || isNaN(Number(v)) ? null : Number(v));
+
+function normalize(j) {
+  const o = Array.isArray(j) ? j[0] : j;
+  return ((o && o.splits) || []).filter(s => s && s.id != null).map(s => ({
+    id: String(s.id), name: s.name || 'Untitled split',
+    days: (s.days || []).filter(d => d && d.id != null).map(d => ({
+      id: String(d.id), name: d.name || 'Untitled day',
+      workouts: (d.workouts || []).map(w => ({
+        date: String(w.date || ''), exercise: w.exercise || 'Exercise', category: w.category || null,
+        sets: val(w.sets), reps: nums(w.reps), weight: nums(w.weight), duration: val(w.duration), distance: val(w.distance)
+      }))
+    }))
+  }));
+}
+
+function demoTree() {
+  const ex = [['Bench Press',4,[8,8,7,6],[60,60,60,60]],['Overhead Press',3,[10,10,8],[35,35,35]],['Treadmill',1,[],[],20,3.2]], out = [];
+  [0,7,14,21].forEach((d, w) => ex.forEach(e => out.push({date:`2026-09-${String(7+d).padStart(2,'0')}`,exercise:e[0],category:e[4]?'cardio':'strength',sets:e[1],reps:e[2],weight:e[3].map(x=>x+2.5*w),duration:e[4]||null,distance:e[5]||null})));
+  return { splits: [{id:1,name:'Push Pull Legs',days:[{id:1,name:'Push day',workouts:out},{id:2,name:'Pull day',workouts:[]}]},{id:2,name:'Upper / Lower',days:[]}] };
+}
+
+async function fetchTree() {
+  if (demo) return normalize(demoTree());
+  const ctrl = new AbortController(), timer = setTimeout(() => ctrl.abort(), 30000);
+  try {
+    const headers = {};
+    if (tg && tg.initData) headers['X-Telegram-Init-Data'] = tg.initData;
+    const r = await fetch('/api/repvibe', { headers, cache: 'no-store', signal: ctrl.signal });
+    let j = null; try { j = await r.json(); } catch (e) {}
+    if (!r.ok) throw new Error((j && j.error) || `The server answered ${r.status}.`);
+    if (!j) throw new Error('The server did not return JSON.');
+    return normalize(j);
+  } catch (e) {
+    throw new Error(e && e.name === 'AbortError' ? 'Request timed out.' : (e.message || 'Failed to load.'));
+  } finally { clearTimeout(timer); }
+}
+
+/* ---------- helpers ---------- */
+const fmtDate = d => { const x = /^\d{4}-\d{2}-\d{2}$/.test(d) ? new Date(d + 'T00:00:00') : new Date(d); return isNaN(x) ? d : x.toLocaleDateString('en', {weekday:'short', day:'numeric', month:'short', year:'numeric'}); };
+const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
+const split = () => tree.find(s => s.id === splitId) || null;
+const day = () => { const s = split(); return s ? s.days.find(d => d.id === dayId) || null : null; };
+const sorted = d => (d ? d.workouts.slice().sort((a, b) => b.date.localeCompare(a.date)) : []);
+function detail(w) {
+  const p = [];
+  if (w.sets != null) p.push(plural(w.sets, 'set'));
+  if (w.reps.length) p.push(w.reps.join(' / ') + ' reps');
+  if (w.weight.length) p.push(w.weight.join(' / ') + ' kg');
+  if (w.duration != null) p.push(w.duration + ' min');
+  if (w.distance != null) p.push(w.distance + ' km');
+  return p.join(' • ') || 'No details logged';
+}
+
+/* ---------- render ---------- */
+function setCenter(html) { root.innerHTML = `<div class="center">${html}</div>`; }
+function showError(msg) { setCenter(`<p class="bad">${esc(msg)}</p><button class="btn sm" id="retry">Retry</button>`); document.getElementById('retry').onclick = load; }
+
+function panel(title, sub, count, body, foot) {
+  return `<section class="panel"><header class="ph"><div><h2>${esc(title)}</h2>${sub ? `<small>${esc(sub)}</small>` : ''}</div><span class="badge">${count}</span></header><ul class="list">${body}</ul>${foot ? `<div class="foot">${foot}</div>` : ''}</section>`;
+}
+function selRow(kind, id, name, meta, on) {
+  return `<li><button class="row sel ${on ? 'on' : ''}" data-k="${kind}" data-id="${esc(id)}"><span class="tx"><span class="nm" style="display:block">${esc(name)}</span><span class="dt" style="display:block">${esc(meta)}</span></span>${chevron}</button></li>`;
+}
+
+function render() {
+  const s = split(), d = day(), list = sorted(d);
+  const splitsBody = tree.length ? tree.map(x => selRow('s', x.id, x.name, plural(x.days.length, 'day'), x.id === splitId)).join('') : '<li class="hint">No splits yet. Create one from the settings page.</li>';
+  const daysBody = !s ? '<li class="hint">Select a split to view its days.</li>' : s.days.length ? s.days.map(x => selRow('d', x.id, x.name, `${plural(new Set(x.workouts.map(w => w.exercise)).size, 'exercise')} • ${plural(new Set(x.workouts.map(w => w.date)).size, 'session')}`, x.id === dayId)).join('') : '<li class="hint">No days in this split yet.</li>';
+  let wBody, dates = 0;
+  if (!d) wBody = '<li class="hint">Select a day to view its workouts.</li>';
+  else if (!list.length) wBody = '<li class="hint">No workouts logged yet. Log this day through the Telegram bot.</li>';
+  else {
+    let last = null; wBody = '';
+    list.forEach(w => {
+      if (w.date !== last) { last = w.date; dates++; wBody += `<li class="grp">${esc(fmtDate(w.date))}</li>`; }
+      wBody += `<li><div class="row static"><span class="tx"><span class="nm wrap" style="display:block">${esc(w.exercise)}</span><span class="dt" style="display:block">${esc(detail(w))}</span></span>${w.category ? `<span class="cat">${esc(w.category)}</span>` : ''}</div></li>`;
+    });
+  }
+  const chartBtn = `<button class="btn" id="open" ${list.length ? '' : 'disabled'}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 20v-6M12 20V6M19 20v-10"/></svg>View progress chart</button>`;
+  root.innerHTML = `<div class="cols">${panel('Workout Splits', '', tree.length, splitsBody)}${panel('Routine Days', s && s.name, s ? s.days.length : 0, daysBody)}${panel('Workout History', d && d.name, dates, wBody, chartBtn)}</div>`;
+}
+
+root.addEventListener('click', e => {
+  const r = e.target.closest('[data-k]');
+  if (r) {
+    if (r.dataset.k === 's') { splitId = r.dataset.id; const s = split(); dayId = s && s.days[0] ? s.days[0].id : null; }
+    else dayId = r.dataset.id;
+    render(); return;
+  }
+  if (e.target.closest('#open')) openChart();
+});
+
+async function load() {
+  setCenter('Loading your workouts…');
+  try {
+    tree = await fetchTree();
+    const s = tree[0]; splitId = s ? s.id : null; dayId = s && s.days[0] ? s.days[0].id : null;
+    render();
+  } catch (e) { showError(e.message || 'Failed to load.'); }
+}
+
+/* ---------- chart (same logic as v1) ---------- */
+const ov = document.getElementById('ov'); let chart, metric = 'volume';
+const perSet = (w, useWeight) => { const s = +w.sets || 1, r = w.reps, k = w.weight; if (!r.length || (useWeight && !k.length)) return 0; let t = 0; for (let i = 0; i < s; i++) t += (r[i] ?? r[r.length - 1]) * (useWeight ? (k[i] ?? k[k.length - 1]) : 1); return t; };
+const metrics = { volume: w => perSet(w, true), weight: w => Math.max(0, ...w.weight), reps: w => perSet(w, false) };
+const labels = { volume: 'Volume (sets × reps × kg)', weight: 'Top weight (kg)', reps: 'Total reps' };
+
+function openChart() { const d = day(); if (!d) return; document.getElementById('ct').textContent = d.name + ' progress'; ov.hidden = false; draw(); }
+function closeChart() { ov.hidden = true; if (chart) { chart.destroy(); chart = null; } }
+
+function draw() {
+  const d = day(); if (!d) return;
+  if (typeof Chart === 'undefined') { document.querySelector('.cv').innerHTML = '<p class="hint">The chart library could not be loaded. Check your connection.</p>'; return; }
+  const mut = '#94a3b8', line = '#334155', cur = d.workouts;
+  const exs = [...new Set(cur.map(w => w.exercise))];
+  const dates = [...new Set(cur.map(w => w.date))].sort().slice(-6);
+  const ds = dates.map((dt, i) => ({
+    label: fmtDate(dt),
+    data: exs.map(e => { const rows = cur.filter(w => w.exercise === e && w.date === dt); return rows.length ? rows.reduce((a, w) => a + metrics[metric](w), 0) : null; }),
+    backgroundColor: `hsl(24 94% ${82 - i * (32 / Math.max(dates.length - 1, 1))}%)`, borderRadius: 6, maxBarThickness: 36
+  }));
+  if (chart) chart.destroy();
+  chart = new Chart(document.getElementById('cv'), {
+    type: 'bar', data: { labels: exs, datasets: ds },
+    options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { labels: { color: mut, usePointStyle: true, boxWidth: 8 } } },
+      scales: { x: { ticks: { color: mut }, grid: { display: false } }, y: { beginAtZero: true, title: { display: true, text: labels[metric], color: mut }, ticks: { color: mut }, grid: { color: line } } } }
+  });
+}
+document.getElementById('seg').onclick = e => {
+  const b = e.target.closest('button'); if (!b) return; metric = b.dataset.m;
+  document.querySelectorAll('#seg .chip').forEach(x => x.classList.toggle('on', x === b)); draw();
+};
+document.getElementById('cx').onclick = closeChart;
+ov.addEventListener('mousedown', e => { if (e.target === ov) closeChart(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !ov.hidden) closeChart(); });
+
+load();
+</script>
+</body></html>
